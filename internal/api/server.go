@@ -21,6 +21,10 @@ type Server struct {
 func NewServer(port string) *Server {
 	router := gin.Default()
 
+// need /health endpoint to check if the server is running
+	router.GET("/health", func(c *gin.Context) {
+		c.JSON(http.StatusOK, gin.H{"status": "ok"})
+	})
 	routes.SetupRoutes(router)
 
 	return &Server{
