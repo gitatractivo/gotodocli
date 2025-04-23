@@ -56,5 +56,4 @@ func (s *Server) Run() error {
 	}
 	log.Println("Server exited properly")
 	return nil
-
 }

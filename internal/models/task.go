@@ -3,7 +3,7 @@ package models
 import "time"
 
 type Task struct{
-	ID uint `json:"id" gorm:"primary_key"`
+	ID uint `json:"id" gorm:"primary_key;unique;autoIncrement"`
 	Title string `json:"title" gorm:"not null"`
 	Completed bool `json:"completed" gorm:"default:false"`
 	Description string `json:"description"`
