@@ -1,5 +1,5 @@
 # Binaries
-/bin/
+bin/
 *.exe
 *.exe~
 *.dll
@@ -17,8 +17,7 @@
 
 # Go build cache and modules
 *.test
-*.mod
-*.sum
+
 
 # IDE/editor files
 .vscode/
@@ -42,3 +41,10 @@ Thumbs.db
 *.log.*
 *.log.*.*
 *.log.*.*.*
+
+# SQLite database
+*.db
+*.sqlite
+*.sqlite3
+
+

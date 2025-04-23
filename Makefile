@@ -1,7 +1,7 @@
 .PHONY: all build clean test lint run migrate docker-build help init vet fmt check
 
 # go parameters
-BINARY_NAME = go-api
+BINARY_NAME = go-cli
 MAIN_PACKAGE=./cmd/todo
 BINARY_PATH= ./bin/$(BINARY_NAME)
 GO_FILES=$(shell find . -name "*.go" -type f)
@@ -14,7 +14,7 @@ BUILD_DATE=$(shell date -u +'%Y-%m-%dT%H:%M:%SZ')
 LDFLAGS=-ldflags "-X main.Version=$(VERSION) -X main.Commit=$(COMMIT) -X main.BuildDate=$(BUILD_DATE)"
 
 # docker parameters
-IMAGE_NAME=go-api
+IMAGE_NAME=go-cli
 IMAGE_TAG=$(VERSION)
 
 # Test parameters
