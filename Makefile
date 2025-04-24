@@ -54,7 +54,7 @@ build:
 	go build $(LDFLAGS) -o $(BINARY_PATH) $(MAIN_PACKAGE)
 	@echo "Build completed successfully"
 
-run: Build
+run: build
 	@echo "Running $(BINARY_NAME)..."
 	$(BINARY_PATH)
 

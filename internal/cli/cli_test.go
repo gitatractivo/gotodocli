@@ -52,7 +52,7 @@ func TestApp_Run(t *testing.T){
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			a := NewApp("", "", "")
+			a := NewApp()
 			err := a.Run(tt.args)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("Run() error = %v, wantErr %v", err, tt.wantErr)

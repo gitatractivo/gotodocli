@@ -9,31 +9,30 @@ import (
 	"net/http"
 	"os"
 	"os/exec"
+	"runtime"
 	"strconv"
 	"strings"
+	"syscall"
 	"time"
 
+	"github.com/gitatractivo/gotodocli/configs"
 	"github.com/gitatractivo/gotodocli/internal/models"
 )
 
 // App represents the CLI application
 type App struct {
-	Version   string
-	Commit    string
-	BuildDate string
+	
 }
 
-const (
-	apiURL  = "http://localhost:8080/api/v1"
-	pidFile = "/tmp/todo-server.pid"
+var (
+	apiURL  = configs.GetConfig().ApiBaseUrl
+	pidFile = configs.GetConfig().ServerPidFile
 )
 
 // NewApp creates a new CLI application also take version, commit and build date as parameters
-func NewApp(version, commit, buildDate string) *App {
+func NewApp() *App {
 	return &App{
-		Version:   version,
-		Commit:    commit,
-		BuildDate: buildDate,
+		
 	}
 }
 
@@ -89,7 +88,8 @@ func (a *App) printHelp() error {
 }
 
 func (a *App) printVersion() error {
-	fmt.Printf("Todo CLI v%s (commit: %s, built: %s)\n", a.Version, a.Commit, a.BuildDate)
+	config := configs.GetConfig()
+	fmt.Printf("Todo CLI v%s (commit: %s, built: %s)\n", config.Version, config.Commit, config.BuildDate)
 	return nil
 }
 
@@ -110,6 +110,7 @@ func (a *App) handleAddTask(args []string) error {
 	if err != nil {
 		return fmt.Errorf("error preparing task data: %w", err)
 	}
+	fmt.Println("Sending request to server...",apiURL+"/tasks")
 	resp, err := http.Post(apiURL+"/tasks", "application/json", bytes.NewBuffer(jsonData))
 	if err != nil {
 		return fmt.Errorf("error sending request to server: %w", err)
@@ -138,6 +139,7 @@ func (a *App) handleAddTask(args []string) error {
 
 func (a *App) handleListTasks() error {
 	// Send GET request to API
+	fmt.Println("Sending request to server...",apiURL+"/tasks")
 	resp, err := http.Get(apiURL + "/tasks")
 	if err != nil {
 		return fmt.Errorf("error connecting to server: %w", err)
@@ -320,16 +322,24 @@ func isServerRunning() bool {
 		return false
 	}
 
+	fmt.Printf("Server PID: %d\n", pid)
 	// Check if process exists
 	process, err := os.FindProcess(pid)
 	if err != nil {
+		os.Remove(pidFile)
 		return false
 	}
 
 	// On Unix systems, FindProcess always succeeds, so we need to send signal 0
 	// to check if process exists
-	err = process.Signal(os.Signal(nil))
-	return err == nil
+	if runtime.GOOS == "windows" {
+		// On Windows, FindProcess only succeeds if the process exists
+		return true
+	} else {
+		// On Unix, use signal 0 to check process existence
+		err = process.Signal(syscall.Signal(0))
+		return err == nil
+	}
 }
 
 func getStatusEmoji(status bool) string {
