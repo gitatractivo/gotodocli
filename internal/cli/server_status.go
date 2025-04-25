@@ -1,4 +1,5 @@
-package server
+
+package cli
 
 import (
 	"fmt"
@@ -7,12 +8,26 @@ import (
 	"strconv"
 	"syscall"
 
-	"github.com/gitatractivo/gotodocli/configs"
+	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 )
 
-// IsServerRunning checks if the server is running
-func IsServerRunning() bool {
-	pidFile := configs.GetConfig().ServerPidFile
+var serverStatusCmd = &cobra.Command{
+	Use:   "status",
+	Short: "Check server status",
+	Long:  `Check if the API server is running.`,
+	Run: func(cmd *cobra.Command, args []string) {
+		if isServerRunning() {
+			fmt.Println("Server is running")
+		} else {
+			fmt.Println("Server is not running")
+		}
+	},
+}
+
+// isServerRunning checks if the server is running
+func isServerRunning() bool {
+	pidFile := viper.GetString("server_pid_file")
 
 	// Check if PID file exists
 	if _, err := os.Stat(pidFile); os.IsNotExist(err) {
@@ -50,3 +65,8 @@ func IsServerRunning() bool {
 		return err == nil
 	}
 }
+
+func init() {
+	serverCmd.AddCommand(serverStatusCmd)
+}
+

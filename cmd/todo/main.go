@@ -7,6 +7,7 @@ import (
 	"github.com/gitatractivo/gotodocli/configs"
 	"github.com/gitatractivo/gotodocli/internal/api"
 	"github.com/gitatractivo/gotodocli/internal/cli"
+
 )
 
 var (
@@ -18,10 +19,7 @@ var (
 
 
 func main() {
-
 	configs.InitConfig(Version, Commit, BuildDate)
-	fmt.Printf("Todo CLI v%s (commit: %s, built at: %s)\n", Version, Commit, BuildDate)
-
 	if len(os.Args) >= 3 && os.Args[1] == "server" && os.Args[2] == "run" {
 
 		if err := startServer(); err != nil {
@@ -30,11 +28,7 @@ func main() {
 		}
 		return
 	}
-	app := cli.NewApp()
-	if err := app.Run(os.Args); err != nil {
-		fmt.Printf("Error: %v\n", err)
-		os.Exit(1)
-	}
+	cli.Execute()
 }
 
 
