@@ -5,10 +5,12 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"os"
 	"strconv"
 
-	"github.com/gitatractivo/gotodocli/internal/models"
 	"github.com/gitatractivo/gotodocli/internal/cli/utils"
+	"github.com/gitatractivo/gotodocli/internal/models"
+	"github.com/olekukonko/tablewriter"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )
@@ -44,16 +46,26 @@ var doneCmd = &cobra.Command{
 			return fmt.Errorf("server error (status %d): %s", resp.StatusCode, string(body))
 		}
 
-		fmt.Println("ID\tCompleted\tTitle")
-		fmt.Println("--\t---------\t-----")
+	
 
+		
 		var updatedTask models.Task
+
+	
+
 		if err := json.NewDecoder(resp.Body).Decode(&updatedTask); err != nil {
 			return fmt.Errorf("error parsing response: %w", err)
 		}
 
-		fmt.Printf("%d\t%s\t\t%s\n", updatedTask.ID, utils.GetStatusEmoji(updatedTask.Completed), updatedTask.Title)
-		fmt.Println("--\t---------\t-----")
+		//convert to table
+		table := tablewriter.NewWriter(os.Stdout)
+		table.SetHeader([]string{"ID", "Completed", "Title"})
+		table.Append([]string{
+			fmt.Sprintf("%d", updatedTask.ID),
+			utils.GetStatusEmoji(updatedTask.Completed),
+			updatedTask.Title,
+		})
+		table.Render()
 		fmt.Println("Task marked as done")
 		
 		return nil

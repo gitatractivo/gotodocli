@@ -1,4 +1,3 @@
-
 package cli
 
 import (
@@ -7,10 +6,12 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"os"
 	"strings"
 
-	"github.com/gitatractivo/gotodocli/internal/models"
 	"github.com/gitatractivo/gotodocli/internal/cli/utils"
+	"github.com/gitatractivo/gotodocli/internal/models"
+	"github.com/olekukonko/tablewriter"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )
@@ -53,11 +54,15 @@ var addCmd = &cobra.Command{
 		if err := json.NewDecoder(resp.Body).Decode(&createdTask); err != nil {
 			return fmt.Errorf("error parsing response: %w", err)
 		}
-		
-		fmt.Println("ID\tCompleted\tTitle")
-		fmt.Println("--\t---------\t-----")
-		fmt.Printf("%d\t%s\t%s\n", createdTask.ID, utils.GetStatusEmoji(createdTask.Completed), createdTask.Title)
-		fmt.Println("--\t---------\t-----")
+		//convert to table
+		table := tablewriter.NewWriter(os.Stdout)
+		table.SetHeader([]string{"ID", "Completed", "Title"})
+		table.Append([]string{
+			fmt.Sprintf("%d", createdTask.ID),
+			utils.GetStatusEmoji(createdTask.Completed),
+			createdTask.Title,
+		})
+		table.Render()
 		fmt.Println("Task created successfully")
 		
 		return nil

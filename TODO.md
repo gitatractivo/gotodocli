@@ -10,6 +10,8 @@
 - [ ] Add command to create a new TODO
 - [ ] Add licence 
 - [ ] Enable date and time fields
+- [ ] Get list by date
+- [ ] Hardcode Today Yesterday Tomorrow 
 
 ## 🧠 Ideas / Backlog
 - [ ] List TODOs by priority or due date
