@@ -6,7 +6,7 @@
 - [x] Add cobra
 
 ## 🔨 In Progress
-- [ ] Add Table
+- [X] Add Table
 - [ ] Add command to create a new TODO
 - [ ] Add licence 
 - [ ] Enable date and time fields
