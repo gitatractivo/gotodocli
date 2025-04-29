@@ -9,6 +9,10 @@ import (
 	"github.com/gitatractivo/gotodocli/internal/storage/sqlite"
 )
 
+//TODOS: create handlers for projects and users and update handlers for tasks for priority, due date, category, tags, project, user, subtask, reminder, completed by, assigned to, assigned by, attachments
+
+//TODOS:first we are going to update current handlers for tasks for priority, due date, tags, reminder
+
 type TaskHandler struct{
 	storage *sqlite.SQLiteStorage
 }
@@ -25,6 +29,14 @@ func (h *TaskHandler) CreateTask(c *gin.Context){
 	if err:=c.ShouldBindJSON(&task); err!=nil{
 		c.JSON(http.StatusBadRequest, gin.H{"error":err.Error()})
 	}
+	//handle tags
+
+	tagModels := make([]models.Tag, len(task.Tags))
+	for i, tag := range task.Tags {
+		tagModels[i] = models.Tag{Name: tag.Name}
+	}
+	task.Tags = tagModels
+
 	log.Println("Task created",task)
 	if err:=h.storage.CreateTask(&task); err!=nil{
 		c.JSON(http.StatusInternalServerError,gin.H{"error":err.Error()})
