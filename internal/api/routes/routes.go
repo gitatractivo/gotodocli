@@ -6,6 +6,8 @@ import (
 	"github.com/gitatractivo/gotodocli/internal/storage/sqlite"
 )
 
+//TODOS: create routes for projects and users and update routes for tasks for priority, due date, category, tags, project, user, subtask, reminder, completed by, assigned to, assigned by, attachments
+
 func SetupRoutes(router *gin.Engine){
 	storage,err:=sqlite.NewSQLiteStorage("tasks.db")
 	if err!=nil{
@@ -25,6 +27,7 @@ func SetupRoutes(router *gin.Engine){
 			taskRouter.PUT("/:id",handler.UpdateTask)
 			taskRouter.DELETE("/:id",handler.DeleteTask)
 			taskRouter.POST("/done/:id",handler.MarkTaskAsDone)
+
 		}
 	}
 
