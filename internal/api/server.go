@@ -9,7 +9,6 @@ import (
 	"os/signal"
 	"syscall"
 	"time"
-
 	"github.com/gin-gonic/gin"
 	"github.com/gitatractivo/gotodocli/configs"
 	"github.com/gitatractivo/gotodocli/internal/api/routes"
