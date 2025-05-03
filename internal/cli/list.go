@@ -7,6 +7,7 @@ import (
 	"io"
 	"net/http"
 	"os"
+	"strings"
 
 	"github.com/gitatractivo/gotodocli/internal/cli/utils"
 	"github.com/gitatractivo/gotodocli/internal/models"
@@ -47,14 +48,36 @@ var listCmd = &cobra.Command{
 
 		table := tablewriter.NewWriter(os.Stdout)
 
-		table.SetHeader([]string{"ID", "Completed", "Title"})
+		table.SetHeader([]string{"ID", "Completed", "Title", "Tags", "Due Date", "Priority", "Project"})
 
 		for _, task := range tasks {
 			// fmt.Printf("%d\t%s\t\t%s\n", task.ID,
+
+			tagNames := make([]string, len(task.Tags))
+
 			table.Append([]string{
 				fmt.Sprintf("%d", task.ID),
 				utils.GetStatusEmoji(task.Completed),
 				task.Title,
+				strings.Join(tagNames, ","),
+				func() string {
+					if task.DueDate != nil {
+						return task.DueDate.Format("2006-01-02")
+					}
+					return "-"
+				}(),
+				func() string {
+					if task.Priority != nil {
+						return fmt.Sprintf("%d", *task.Priority)
+					}
+					return "-"
+				}(),
+				func() string {
+					if task.Project != nil {
+						return task.Project.Name
+					}
+					return "-"
+				}(),
 			})
 		}
 
